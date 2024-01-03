@@ -3,6 +3,7 @@ package com.vitoreduardo.workshopmongo.resources;
 import com.vitoreduardo.workshopmongo.domain.User;
 import com.vitoreduardo.workshopmongo.dto.UserDTO;
 import com.vitoreduardo.workshopmongo.services.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,15 @@ public class UserResource {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 
         return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody UserDTO userDTO) {
+        User obj = userService.fromDTO(userDTO);
+        obj.setId(id);
+        obj = userService.update(obj);
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
